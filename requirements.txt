@@ -1,0 +1,9 @@
+EasyProcess==0.1.6
+argparse==1.1
+beautifulsoup4==4.3.2
+decorator==3.4.0
+entrypoint2==0.0.6
+path.py==5.1
+pyunpack==0.0.3
+rarfile==2.6
+unrar==0.2
