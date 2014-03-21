@@ -9,7 +9,10 @@ import zipfile
 
 root_path = 'D:\Test\PythonDownloadSubtitles\PythonDownloadSubs\Series'
 temp_subs_folder = 'D:\PythonProjects\DownloadSubtitles\subs'
-subsgroups_to_use = ['argenteam', 'thesubfactory', 'substeam']
+default_subsgroups = ['argenteam', 'thesubfactory', 'substeam']
+
+overrided_show_names = { 'the americans 2013' : 'the americans' }
+overrided_subgroups = { 'suits' : ['argenteam', 'thesubfactory', 'substeam', 'subtitulos.es'] }
 
 
 
@@ -37,6 +40,13 @@ def downloadSubtitle(video_file, video_folder, show, season, episode, quality, g
 
     page_iter = page_iter + 1
 
+  
+  subsgroups_for_show = []
+  if show.lower() in overrided_subgroups:
+      subsgroups_for_show = overrided_subgroups[show.lower()]
+  else:
+      subsgroups_for_show = default_subsgroups
+
   #We have the divs with the descriptions and links, we have to find the one we want
   subtitle_downloaded = False
   for idx, title_div in enumerate(title_divs):
@@ -44,7 +54,7 @@ def downloadSubtitle(video_file, video_folder, show, season, episode, quality, g
     description_div_str = description_divs[idx].text.encode('utf-8')
     #Check that the name of the sub contains the episode name sXXeXX
     if (('s' + season + 'e' + episode) in title_div_str.lower()) and quality.lower() in description_div_str.lower() and group.lower() in description_div_str.lower() and (not is_proper or 'proper' in description_div_str.lower()):
-      for sub_group in subsgroups_to_use:
+      for sub_group in subsgroups_for_show:
         if sub_group in description_div_str.lower():
             try:
                 details_page_url = str(title_divs[idx].find_all('a')[0]['href'])
@@ -130,13 +140,20 @@ for root, dirs, files in os.walk(root_path):
           quality = name_parts[0][3]
           group = name_parts[0][4]
           is_proper = 'proper' in file;
+
           print '--------------------'
           print 'Show: '+ name_parts[0][0].replace('.', ' ')
           print 'Season: ' + name_parts[0][1]
           print 'Episode:' + name_parts[0][2]
           print 'Quality: ' + name_parts[0][3]
           print 'Group: '+ name_parts[0][4]
+
+           #check overriden shownames
+          if show.lower() in overrided_show_names:
+              show = overrided_show_names[show.lower()]
+
           success = downloadSubtitle(file, root, show, season, episode, quality, group, is_proper)
+
           if success:
             print 'SUBTITLE DOWNLOADED!!'
           else:
