@@ -1,3 +1,5 @@
+#!/management_scripts/downloadSubs/env/bin/python
+
 import os
 import re
 import bs4 as bs
@@ -7,12 +9,12 @@ import shutil
 import rarfile
 import zipfile
 
-root_path = 'D:\Test\PythonDownloadSubtitles\PythonDownloadSubs\Series'
-temp_subs_folder = 'D:\PythonProjects\DownloadSubtitles\subs'
+root_path = '/media/sharedHDD/Series'
+temp_subs_folder = '/tmp'
 default_subsgroups = ['argenteam', 'thesubfactory', 'substeam']
 
 overrided_show_names = { 'the americans 2013' : 'the americans' }
-overrided_subgroups = { 'suits' : ['argenteam', 'thesubfactory', 'substeam', 'subtitulos.es'] }
+overrided_subgroups = { 'suits' : ['argenteam', 'thesubfactory', 'substeam', 'subtitulos.es'], 'modern family': ['argenteam', 'thesubfactory', 'substeam', 'subadictos']}
 
 
 
@@ -107,8 +109,9 @@ def downloadSubtitle(video_file, video_folder, show, season, episode, quality, g
 
                 if subtitle_downloaded:
                     break;
-            except:
-                pass # dont do anything, just go to the following entry
+            except Exception,e: 
+		print str(e)
+		pass # dont do anything, just go to the following entry
 
     if subtitle_downloaded:
         break;
